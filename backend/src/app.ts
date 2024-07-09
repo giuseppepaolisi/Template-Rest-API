@@ -3,11 +3,12 @@ import express from "express";
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
+import { corsOptions } from "./config/corsOptions";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { notFound, errorHandler } from "./middlewares/index.middleware";
 import api from "./api/index.api";
-import { validateEnv } from './config/env.config';
+import ExpressMongoSanitize from "express-mongo-sanitize";
 
 // Load environment variables from .env file
 config();
@@ -20,8 +21,19 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(helmet());
-app.use(cors());
+    app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+    app.use(helmet.xssFilter());
+    app.use(helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'trusted-cdn.com'"],
+            objectSrc: ["'none'"],
+            upgradeInsecureRequests: [],
+        },
+    }));
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use(ExpressMongoSanitize());
 
 // API routes
 app.use("/api/", api);
