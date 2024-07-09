@@ -7,11 +7,7 @@ dotenv.config();
 export const validateEnv = (): EnvConfig => {
   try {
     const envVars: EnvConfig = envSchema.parse(process.env);
-    return {
-      PORT: envVars.PORT,
-      NODE_ENV: envVars.NODE_ENV,
-      MONGO_DB_URI: envVars.MONGO_DB_URI
-    };
+    return envVars;
   } catch (error) {
     if (error instanceof ZodError) {
       console.error('Validation failed:', error.errors);

@@ -6,9 +6,10 @@ import cors from "cors";
 import { corsOptions } from "./config/corsOptions";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import { notFound, errorHandler } from "./middlewares/index.middleware";
+import { notFoundMiddleware, errorHandlerMiddleware  } from "./middlewares/index.middleware";
 import api from "./api/index.api";
 import ExpressMongoSanitize from "express-mongo-sanitize";
+import { errorHandler, successHandler } from "./config/morgan";
 
 // Load environment variables from .env file
 config();
@@ -31,6 +32,7 @@ app.use(helmet());
             upgradeInsecureRequests: [],
         },
     }));
+app.use(cors());
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(ExpressMongoSanitize());
@@ -39,7 +41,7 @@ app.use(ExpressMongoSanitize());
 app.use("/api/", api);
 
 // Error handling middleware
-app.use(notFound);
-app.use(errorHandler);
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 export default app;
