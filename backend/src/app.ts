@@ -10,7 +10,7 @@ import api from "./api/index.api";
 import { validateEnv } from './config/env.config';
 
 // Load environment variables from .env file
-const { PORT } = validateEnv();
+config();
 
 const app = express();
 
