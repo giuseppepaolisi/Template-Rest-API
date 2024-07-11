@@ -1,10 +1,10 @@
-import CustomAPIError, { ErrorCode } from "./custom.error";
+import CustomAPIError, { ErrorCode } from './custom.error';
 
 class InternalserverError extends CustomAPIError {
   statusCode: number;
-  constructor(message:string, errorCode: ErrorCode)  {
+  constructor(message: string, errorCode: ErrorCode) {
     super(message, errorCode, 500, null);
-        this.statusCode = 500;
+    this.statusCode = 500;
   }
 }
 

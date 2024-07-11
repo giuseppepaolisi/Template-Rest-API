@@ -5,24 +5,23 @@ import { validateEnv } from './env.config';
 
 const { NODE_ENV } = validateEnv();
 
-const getIPFormat = () =>
-    NODE_ENV === 'production' ? ':remote-addr - ' : '';
+const getIPFormat = () => (NODE_ENV === 'production' ? ':remote-addr - ' : '');
 
 const accessLogStream = createWriteStream(
-    path.join(__dirname, "..",  'logs/access.log'),
-    { flags: 'a' }
+  path.join(__dirname, '..', 'logs/access.log'),
+  { flags: 'a' }
 );
 
 const successResponseFormat = `${getIPFormat()} :method :url :status :response-time ms :user-agent :date`;
 const successHandler = morgan(successResponseFormat, {
-    stream: accessLogStream,
-    skip: (req, res) => res.statusCode >= 400,
+  stream: accessLogStream,
+  skip: (req, res) => res.statusCode >= 400,
 });
 
 const errorResponseFormat = `${getIPFormat()} :method :url :status :response-time ms :user-agent :date `;
 const errorHandler = morgan(errorResponseFormat, {
-    stream: accessLogStream,
-    skip: (req, res) => res.statusCode < 400,
+  stream: accessLogStream,
+  skip: (req, res) => res.statusCode < 400,
 });
 
 export { errorHandler, successHandler };
